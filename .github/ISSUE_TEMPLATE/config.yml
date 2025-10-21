@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: GitHub Issue工程管理について
+    url: https://github.com/soichiyo/personal-crm/wiki/GitHub-Issue%E5%B7%A5%E7%A8%8B%E7%AE%A1%E7%90%86
+    about: GitHub IssueベースのPDCA工程管理について詳しく知りたい
