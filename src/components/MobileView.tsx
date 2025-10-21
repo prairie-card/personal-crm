@@ -361,15 +361,6 @@ export const MobileView = ({
     } else if (currentTab === "contacts") {
       return (
         <div className="flex-1 overflow-y-auto bg-white">
-          <div className="p-4 border-b sticky top-0 bg-white z-10">
-            <h2 className="text-xl font-bold text-gray-900 mb-3">Contacts</h2>
-            <input
-              type="text"
-              placeholder="名前・会社・タグで検索..."
-              className="w-full px-4 py-2 border border-gray-300 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
-            />
-          </div>
-
           <div className="divide-y divide-gray-100">
             {[...contacts]
               .sort((a, b) => {
@@ -431,10 +422,6 @@ export const MobileView = ({
     } else if (currentTab === "settings") {
       return (
         <div className="flex-1 overflow-y-auto p-4">
-          <h2 className="text-xl font-bold text-gray-900 mb-4 px-2">
-            Settings
-          </h2>
-
           <div className="bg-white rounded-2xl shadow-sm mb-4">
             <h3 className="text-sm font-semibold text-gray-700 p-4 border-b">
               外部連携

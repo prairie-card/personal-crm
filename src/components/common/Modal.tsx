@@ -52,7 +52,7 @@ export const Modal: React.FC<ModalProps> = ({
 
       {/* Modal Content */}
       <div
-        className="relative w-full max-h-[844px] mx-auto bg-white rounded-t-2xl sm:rounded-2xl shadow-xl animate-in slide-in-from-bottom sm:fade-in duration-300 flex flex-col"
+        className="relative w-full max-h-[700px] mx-auto bg-white rounded-t-2xl sm:rounded-2xl shadow-xl animate-in slide-in-from-bottom sm:fade-in duration-300 flex flex-col"
         style={{ maxWidth: "320px" }}
       >
         {/* Header */}

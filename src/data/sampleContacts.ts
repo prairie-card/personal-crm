@@ -113,6 +113,7 @@ export const sampleContacts: Contact[] = [
     birthday: new Date("1988-11-15"), // 11月15日生まれ
     nameReading: "すずき いちろう",
     phone: "090-3333-4444",
+    email: "ichiro.suzuki@def-tech.com",
 
     organization: {
       name: "DEF Technologies株式会社",

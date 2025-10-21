@@ -392,7 +392,7 @@ export const ContactDetailPage = ({
         <div className="h-2 bg-gray-100"></div>
 
         {/* Timeline Section - その人の人生の出来事 */}
-        <div className="px-6 py-6">
+        <div className="px-6 py-6 bg-gray-50">
           <div className="flex items-center justify-between mb-4">
             <div>
               <h2 className="text-xl font-bold text-gray-900">Timeline</h2>
@@ -408,11 +408,7 @@ export const ContactDetailPage = ({
               timeline.map((entry) => (
                 <div
                   key={entry.id}
-                  className={`flex gap-3 text-sm ${
-                    entry.type === "birthday"
-                      ? "bg-pink-50 -mx-2 px-2 py-2 rounded-lg"
-                      : "bg-blue-50 -mx-2 px-2 py-2 rounded-lg"
-                  }`}
+                  className="flex gap-3 text-sm bg-gray-100 -mx-2 px-2 py-2 rounded-lg"
                 >
                   <span className="text-gray-500 font-medium min-w-[40px]">
                     {entry.date}
@@ -519,7 +515,7 @@ export const ContactDetailPage = ({
         <div className="h-2 bg-gray-100"></div>
 
         {/* Action Section */}
-        <div className="px-6 py-6 space-y-3">
+        <div className="px-6 py-6 space-y-3 bg-gray-50">
           <button
             onClick={() => {
               if (onFollowUpClick) {
@@ -538,7 +534,7 @@ export const ContactDetailPage = ({
                 onDeepSearchClick();
               }
             }}
-            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-blue-100 text-blue-900 rounded-lg font-medium hover:bg-blue-200 transition-colors"
+            className="w-full flex items-center justify-center gap-2 px-4 py-3 bg-gray-100 text-gray-900 rounded-lg font-medium hover:bg-gray-200 transition-colors"
           >
             <Globe className="w-5 h-5" />
             <span>この人物を深く掘る</span>
