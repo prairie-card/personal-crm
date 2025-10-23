@@ -407,7 +407,7 @@ export const MobileView = ({
                           {contact.name}
                         </h3>
                         {contact.status === "new" && (
-                          <span className="px-2 py-0.5 bg-red-500 text-white text-xs rounded-full font-medium">
+                          <span className="px-2 py-0.5 bg-gray-900 text-white text-xs rounded-full font-medium">
                             新着
                           </span>
                         )}

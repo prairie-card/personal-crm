@@ -4,105 +4,162 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Project Overview
 
-Personal CRM is a relationship management application that focuses on "caring for digital connections." The project explores new UX for human relationships through AI-assisted networking.
+Personal CRM is a relationship management application focusing on "caring for digital connections." This is a **mockup prototype** for internal communication with engineers and designers, prioritizing visual design over perfect implementation.
 
 **Mission**: "Care for encounters and guide connections with people you haven't met yet."
 
 ## Core Philosophy
 
 - AI is a "quiet supporter," not a replacement for human relationships
-- Don't over-automate; maintain transparency and undo capability
-- Design around human motivations like "want to meet" and "interested in"
-
-## Development Phases
-
-1. **PoC v1** (Current): Meeting → Follow-up
-   - Auto-generate contacts from business cards/SNS
-   - AI-generated follow-up message drafts
-
-2. **PoC v2** (Planned): Discover/Search
-   - Purpose-driven search and connection path suggestions
-
-3. **β version**: Team sharing and introduction automation
-   - Slack integration, shared network
-
-4. **Commercial**: Individual/Enterprise deployment
-
-## Core Data Objects
-
-- **Contact**: Record of encounters (business card, SNS, manual)
-- **Profile**: Multi-faceted information about others or self
-- **Keyword**: Network tag axis
-- **Interaction**: Action records (follow-ups, etc.)
-- **Reminder**: Action reminders
-- **Group**: Community, profession, keyword-based
-- **Purpose**: Discovery exploration purpose
-- **Introduction**: Introduction requests and progress tracking
-- **Connector**: External integrations (Prairie/Gmail/Slack)
-- **Discovery/Search**: Potential connection exploration and search engine
-
-## Project Structure
-
-```
-personal-crm/
-├── src/
-│   ├── components/
-│   │   ├── PersonalCRMHome.tsx  # Main container component
-│   │   ├── MobileView.tsx       # Mobile interface (swipeable cards)
-│   │   ├── DesktopView.tsx      # Desktop interface (sidebar + preview)
-│   │   └── AddModal.tsx         # Contact addition modal
-│   ├── types/
-│   │   └── Contact.ts           # Contact type definition
-│   ├── data/
-│   │   └── sampleContacts.ts    # Sample contact data
-│   ├── App.tsx                  # Application root
-│   ├── main.tsx                 # Entry point
-│   └── index.css                # Global styles (Tailwind)
-├── spec/                        # Specification documents (Japanese)
-├── hoge.tsx                     # Original prototype (legacy)
-└── ...config files
-```
+- Prioritize visual design and demo-ability over complete functionality
+- Keep implementation simple - use `useState` only, no complex state management
+- Mock data is hardcoded; persistence is not required (reload resets are acceptable)
 
 ## Development Commands
 
-- **Start dev server**: `npm run dev` - Runs on http://localhost:5173/
-- **Build for production**: `npm run build` - Outputs to `dist/`
-- **Preview production build**: `npm run preview`
+- `npm run dev` - Start dev server (http://localhost:5173/)
+- `npm run build` - Build for production (TypeScript compilation + Vite build)
+- `npm run preview` - Preview production build
 
 ## Tech Stack
 
 - **Framework**: React 19 + TypeScript
 - **Build Tool**: Vite
-- **Styling**: Tailwind CSS v3
+- **Styling**: Tailwind CSS v3 (utility-first)
 - **Icons**: lucide-react
+- **State Management**: React Hooks (`useState` only - no Context API or external libraries)
+- **Data**: Hardcoded sample data in `src/data/` (no persistence)
 
-## Current Implementation
+## Architecture & Component Structure
 
-The application implements a dual-view interface:
+### Component Hierarchy
+```
+PersonalCRMHome (main container)
+├── MobileView / DesktopView (responsive layouts)
+├── Home/
+│   ├── ActivitySection
+│   ├── NewContactsSection
+│   ├── ReminderSection
+│   └── TodayEventsSection
+├── AddModal/
+│   ├── BusinessCardScanner
+│   ├── OCRLoading
+│   └── PhotoPreviewGrid
+├── ContactEditModal/
+│   ├── BasicInfo
+│   ├── BioSection
+│   ├── OrganizationInfo
+│   ├── SocialInfo
+│   └── ContentUrlsInfo
+├── common/ (shared components)
+│   ├── Button.tsx
+│   ├── Modal.tsx
+│   ├── Toast.tsx
+│   ├── Loading.tsx
+│   └── Flash.tsx
+└── notifications/
+    ├── GeneralTab
+    └── AISearchTab
+```
 
-**Mobile View** (`MobileView.tsx`):
-- Swipeable contact card interface (Tinder-style)
-- Bottom navigation with tabs: Home, Discover, Add, Search, More
-- Drag-to-keep/skip interaction pattern
+### Key Type Definitions
 
-**Desktop View** (`DesktopView.tsx`):
-- Sidebar navigation
-- Contact list + detail preview layout
-- Integration settings
+**Contact** (`src/types/Contact.ts`): Core entity with:
+- Basic info (name, company, title)
+- Extended fields (birthday, tags, status, photos)
+- Organization details
+- Social links (Twitter/X, LinkedIn, Instagram, etc.)
+- Content URLs
 
-**Core Features**:
-- Contact card display with meeting context
-- AI follow-up suggestions (UI mockup)
-- Integration placeholders (Prairie Card, LinkedIn, Facebook, Gmail)
-- Discover feature placeholder (β)
+**Activity** (`src/types/Activity.ts`): Interaction records (meeting, call, email, note)
+**Reminder** (`src/types/Reminder.ts`): Action reminders
+**Notification** (`src/types/Notification.ts`): System notifications
 
-## Success Metrics
+## Naming Conventions
 
-- **UX**: 1 session completion rate 60%+
-- **Technical**: Connector success rate 90%+
-- **Retention**: Usage intent 70%+
-- **Business**: 3+ PoC companies
-- additional tasks
+- **Components**: `PascalCase.tsx` (e.g., `ContactCard.tsx`)
+- **Hooks**: `use` + `PascalCase.ts` (e.g., `useContactData.ts`)
+- **Utils**: `camelCase.ts` (e.g., `formatDate.ts`)
+- **Types**: `PascalCase.ts` (e.g., `Contact.ts`)
+- **Page Components**: `[Feature]Page`
+- **Modal Components**: `[Feature]Modal`
+- **Section Components**: `[Feature]Section`
 
-- Loading後のフラッシュモーダルが、iPhoneの画面を飛び越えています。また遷移先はHomeで（今はContacts二遷移しています）
-- 1001-01.md のファイルを実装してみて
+## Styling Guidelines
+
+### Color Palette (Minimal Design)
+- **Primary**: Black (#000000)
+- **Secondary**: Gray (#6B7280, #9CA3AF)
+- **Accent**: Blue (#3B82F6) - minimal usage
+- **Background**: White (#FFFFFF)
+- **Text**: Black (#000000), Gray (#6B7280)
+
+### Design Principles
+- Use Tailwind utility classes (avoid custom CSS)
+- Simple button designs (black or gray base colors)
+- Touch-friendly sizes (minimum 44x44px)
+- Basic animations only (CSS transitions, avoid complex animations)
+- Responsive design considerations
+
+## Implementation Philosophy (Mockup Development)
+
+### DO:
+- ✅ Focus on visual design and UI components
+- ✅ Use simple state management (`useState` within components)
+- ✅ Hardcode sample data
+- ✅ Implement basic interactions (clicks, modal open/close)
+- ✅ Ensure demo-ability
+
+### DON'T:
+- ❌ Implement complex backend integration
+- ❌ Add real AI processing or OCR
+- ❌ Use databases or persistence
+- ❌ Add complex state management libraries (Redux, Zustand, etc.)
+- ❌ Over-engineer or perfect the implementation
+
+### Completion Criteria
+- UI is visually implemented
+- Basic interactions work (button clicks, modal toggles)
+- Runs locally without errors
+- Demo-ready state
+
+## GitHub Issue-Based PDCA Workflow
+
+This project uses a specification-driven development approach with GitHub Issues to prevent unintended AI implementations:
+
+1. **Plan Phase**: Define features, requirements, UI/UX design, test cases (use `.github/ISSUE_TEMPLATE/plan-phase.md`)
+2. **Do Phase**: Implementation and testing (use `.github/ISSUE_TEMPLATE/do-phase.md`)
+3. **Check Phase**: Verification and quality evaluation (use `.github/ISSUE_TEMPLATE/check-phase.md`)
+4. **Action Phase**: Improvements and optimization (use `.github/ISSUE_TEMPLATE/action-phase.md`)
+
+### Issue Labels
+- Phase labels: `plan-phase`, `do-phase`, `check-phase`, `action-phase`
+- Type labels: `enhancement`, `implementation`, `verification`, `improvement`
+- Priority labels: `priority-high`, `priority-medium`, `priority-low`
+
+## Git Workflow
+
+### Branch Strategy
+- `main`: Main branch
+- `feature/[feature-name]`: Feature development
+- `fix/[issue-name]`: Bug fixes
+
+### Commit Message Format
+- `feat: new feature`
+- `fix: bug fix`
+- `style: styling changes`
+- `refactor: refactoring`
+- `docs: documentation updates`
+
+## Current Development Phase
+
+**PoC v1** (Current): Meeting → Follow-up
+- Auto-generate contacts from business cards/SNS
+- AI-generated follow-up message drafts
+- Keep-in-Touch reminders
+- Activity logging
+
+**Future Phases**:
+- PoC v2: Discover/Search functionality
+- β: Team sharing and introduction automation (Slack integration)
+- Commercial: Individual/Enterprise deployment

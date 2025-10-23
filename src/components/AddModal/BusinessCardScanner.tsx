@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { X, Camera, Check } from "lucide-react";
+import { Toast } from "../common/Toast";
 
 export interface CapturedPhoto {
   id: string;
@@ -11,14 +12,23 @@ interface BusinessCardScannerProps {
   onCapture: (photos: CapturedPhoto[]) => void; // 撮影した写真配列を渡す
 }
 
+const MAX_CARD_COUNT = 20; // 最大撮影枚数
+
 export const BusinessCardScanner: React.FC<BusinessCardScannerProps> = ({
   onClose,
   onCapture,
 }) => {
   const [isCapturing, setIsCapturing] = useState(false);
   const [capturedPhotos, setCapturedPhotos] = useState<CapturedPhoto[]>([]);
+  const [showToast, setShowToast] = useState(false);
 
   const handleCapture = () => {
+    // 上限枚数チェック
+    if (capturedPhotos.length >= MAX_CARD_COUNT) {
+      setShowToast(true);
+      return;
+    }
+
     setIsCapturing(true);
     // アニメーション効果のため少し遅延
     setTimeout(() => {
@@ -39,13 +49,14 @@ export const BusinessCardScanner: React.FC<BusinessCardScannerProps> = ({
   };
 
   return (
-    <div className="absolute inset-0 z-50 bg-black flex flex-col overflow-hidden">
-      {/* Screen Identifier */}
-      <div className="bg-purple-50 border-b border-purple-200 px-3 py-1 flex items-center justify-center shrink-0 relative z-[9998]">
-        <span className="text-xs font-mono font-semibold text-purple-900">
-          MOB-ADD-SCAN
-        </span>
-      </div>
+    <>
+      <div className="absolute inset-0 z-50 bg-black flex flex-col overflow-hidden">
+        {/* Screen Identifier */}
+        <div className="bg-purple-50 border-b border-purple-200 px-3 py-1 flex items-center justify-center shrink-0 relative z-[9998]">
+          <span className="text-xs font-mono font-semibold text-purple-900">
+            MOB-ADD-SCAN
+          </span>
+        </div>
 
       {/* Header */}
       <div className="p-4 flex items-center justify-between bg-black/50 backdrop-blur-sm shrink-0">
@@ -53,7 +64,7 @@ export const BusinessCardScanner: React.FC<BusinessCardScannerProps> = ({
           <h2 className="text-white font-semibold">名刺をスキャン</h2>
           {capturedPhotos.length > 0 && (
             <p className="text-green-400 text-sm mt-1">
-              {capturedPhotos.length}枚撮影済み
+              {capturedPhotos.length}/{MAX_CARD_COUNT}枚撮影済み
             </p>
           )}
         </div>
@@ -100,7 +111,7 @@ export const BusinessCardScanner: React.FC<BusinessCardScannerProps> = ({
         <div className="flex items-center justify-center gap-4 mb-4">
           <button
             onClick={handleCapture}
-            disabled={isCapturing}
+            disabled={isCapturing || capturedPhotos.length >= MAX_CARD_COUNT}
             className="w-16 h-16 bg-white rounded-full flex items-center justify-center shadow-2xl hover:scale-105 active:scale-95 transition-transform disabled:opacity-50"
           >
             <div className="w-14 h-14 bg-gray-900 rounded-full" />
@@ -137,5 +148,14 @@ export const BusinessCardScanner: React.FC<BusinessCardScannerProps> = ({
         )}
       </div>
     </div>
+
+    <Toast
+      type="error"
+      message={`名刺の撮影は最大${MAX_CARD_COUNT}枚までです`}
+      isVisible={showToast}
+      onClose={() => setShowToast(false)}
+      duration={3000}
+    />
+  </>
   );
 };

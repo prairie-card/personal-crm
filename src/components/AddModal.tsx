@@ -6,6 +6,7 @@ import {
 } from "./AddModal/BusinessCardScanner";
 import { PhotoPreviewGrid } from "./AddModal/PhotoPreviewGrid";
 import { OCRLoading } from "./AddModal/OCRLoading";
+import { OCRSuccessScreen } from "./AddModal/OCRSuccessScreen";
 import { ContactEditModal } from "./ContactEditModal";
 import { Flash, FlashType } from "./common/Flash";
 import { Contact } from "../types/Contact";
@@ -27,8 +28,8 @@ export const AddModal = ({ onClose, onAddContacts }: AddModalProps) => {
   const [step, setStep] = useState<FlowStep>("menu");
   const [newContact, setNewContact] = useState<Partial<Contact>>({});
   const [showFlash, setShowFlash] = useState(false);
-  const [flashType, setFlashType] = useState<FlashType>("success");
-  const [flashMessage, setFlashMessage] = useState("");
+  const [flashType] = useState<FlashType>("success");
+  const [flashMessage] = useState("");
   const [capturedPhotos, setCapturedPhotos] = useState<CapturedPhoto[]>([]); // 撮影した写真
 
   const handleCardScan = () => {
@@ -129,44 +130,19 @@ export const AddModal = ({ onClose, onAddContacts }: AddModalProps) => {
   const handleOCRComplete = () => {
     const photoCount = capturedPhotos.length;
 
-    // 複数枚の場合、編集画面をスキップしてHomeに直接追加
-    if (photoCount > 1) {
-      const newContacts: Contact[] = [];
-      for (let i = 0; i < photoCount; i++) {
-        newContacts.push(generateMockContact(i));
-      }
-
-      // 親コンポーネントに複数コンタクトを渡す
-      if (onAddContacts) {
-        onAddContacts(newContacts);
-      }
-
-      // Flash表示（上部から）
-      setFlashType("success");
-      setFlashMessage(`${photoCount}件のコンタクトが作成されました！`);
-      setShowFlash(true);
-
-      // 1.5秒後にFlashを非表示にしてモーダルを閉じる
-      setTimeout(() => {
-        setShowFlash(false);
-        onClose();
-      }, 1500);
-    } else {
-      // 1枚の場合は従来通り編集画面へ
-      setNewContact(generateMockContact(0));
-
-      // Flash表示
-      setFlashType("success");
-      setFlashMessage("コンタクトが作成されました！");
-      setShowFlash(true);
-
-      // 1秒後にFlashを非表示
-      setTimeout(() => {
-        setShowFlash(false);
-      }, 1000);
-
-      setStep("edit");
+    // コンタクトを作成
+    const newContacts: Contact[] = [];
+    for (let i = 0; i < photoCount; i++) {
+      newContacts.push(generateMockContact(i));
     }
+
+    // 親コンポーネントにコンタクトを渡す
+    if (onAddContacts) {
+      onAddContacts(newContacts);
+    }
+
+    // success画面に遷移
+    setStep("success");
   };
 
   const handleSave = (contact: Partial<Contact>) => {
@@ -270,18 +246,20 @@ export const AddModal = ({ onClose, onAddContacts }: AddModalProps) => {
   // OCRローディング画面
   if (step === "ocr-loading") {
     return (
-      <>
-        <OCRLoading
-          onComplete={handleOCRComplete}
-          cardCount={capturedPhotos.length}
-        />
-        <Flash
-          type={flashType}
-          message={flashMessage}
-          isVisible={showFlash}
-          onClose={() => setShowFlash(false)}
-        />
-      </>
+      <OCRLoading
+        onComplete={handleOCRComplete}
+        cardCount={capturedPhotos.length}
+      />
+    );
+  }
+
+  // OCR完了画面
+  if (step === "success") {
+    return (
+      <OCRSuccessScreen
+        contactCount={capturedPhotos.length}
+        onGoHome={onClose}
+      />
     );
   }
 

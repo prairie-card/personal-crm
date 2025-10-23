@@ -28,32 +28,4 @@ export const sampleNotifications: Notification[] = [
     timestamp: new Date(Date.now() - 1000 * 60 * 60 * 12), // 12時間前
     read: false,
   },
-  {
-    id: "4",
-    type: "ai-search",
-    contactId: "1",
-    title: "山田太郎さんのAI検索",
-    message: "SNSプロフィール情報の検索が完了しました。",
-    timestamp: new Date(Date.now() - 1000 * 60 * 15), // 15分前
-    read: false,
-    actionUrl: "/contacts/1",
-  },
-  {
-    id: "5",
-    type: "ai-search",
-    contactId: "3",
-    title: "鈴木次郎さんのAI検索",
-    message: "情報の検索中です...",
-    timestamp: new Date(Date.now() - 1000 * 60 * 5), // 5分前
-    read: false,
-  },
-  {
-    id: "6",
-    type: "ai-search",
-    contactId: "4",
-    title: "田中三郎さんのAI検索",
-    message: "情報の検索に失敗しました。手動で追加してください。",
-    timestamp: new Date(Date.now() - 1000 * 60 * 60), // 1時間前
-    read: false,
-  },
 ];

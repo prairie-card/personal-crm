@@ -52,10 +52,10 @@ export const NewContactsSection: React.FC<NewContactsSectionProps> = ({
               className="mb-4 cursor-pointer hover:bg-gray-50 -m-4 p-4 rounded-t-xl transition-colors relative"
               onClick={() => onCardClick && onCardClick(contact.id)}
             >
-              {/* Newバッジ（未開封タグがある場合） */}
-              {contact.tags?.includes('未開封') && (
-                <div className="absolute top-2 right-2 px-2 py-1 bg-blue-600 text-white text-xs font-bold rounded-full shadow-sm">
-                  NEW
+              {/* 新着バッジ（status: "new"の場合） */}
+              {contact.status === 'new' && (
+                <div className="absolute top-2 right-2 px-2 py-0.5 bg-gray-900 text-white text-xs font-medium rounded-full">
+                  新着
                 </div>
               )}
 
