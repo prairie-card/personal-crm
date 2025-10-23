@@ -25,6 +25,7 @@ dist-ssr
 
 # Project specific directories
 .cursor
+docs
 
 # Environment variables
 .env
