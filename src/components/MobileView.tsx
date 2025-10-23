@@ -22,6 +22,7 @@ import { TodayEventsSection } from "./Home/TodayEventsSection";
 import { Flash, FlashType } from "./common/Flash";
 import { TimelineSettingsSection } from "./Settings/TimelineSettingsSection";
 import { ActivityDetailModal } from "./ActivityDetailModal";
+import { NewContactMemoModal } from "./NewContactMemoModal";
 
 interface MobileViewProps {
   contacts: Contact[];
@@ -56,6 +57,10 @@ export const MobileView = ({
     null
   ); // 編集画面の開始元を追跡
   const [autoOpenNoteInput, setAutoOpenNoteInput] = useState(false); // メモ入力を自動で開く
+
+  // 新規コンタクトメモモーダル用
+  const [pendingNewContacts, setPendingNewContacts] = useState<Contact[]>([]);
+  const [showNewContactMemoModal, setShowNewContactMemoModal] = useState(false);
 
   // Flash state
   const [flashVisible, setFlashVisible] = useState(false);
@@ -199,6 +204,49 @@ export const MobileView = ({
     setContacts(
       contacts.map((c) => (c.id === updatedContact.id ? updatedContact : c))
     );
+  };
+
+  const handleNewContactMemoSave = (
+    contactId: number,
+    metLocation: string,
+    memo: string
+  ) => {
+    // コンタクトを更新
+    setContacts(
+      contacts.map((c) =>
+        c.id === contactId
+          ? {
+              ...c,
+              metLocation: metLocation || c.metLocation,
+              firstImpressionMemo: memo,
+            }
+          : c
+      )
+    );
+
+    // 次の未処理コンタクトに進む
+    const remaining = pendingNewContacts.slice(1);
+    setPendingNewContacts(remaining);
+
+    if (remaining.length === 0) {
+      setShowNewContactMemoModal(false);
+      setSelectedContact(null);
+    } else {
+      setSelectedContact(remaining[0]);
+    }
+  };
+
+  const handleNewContactMemoSkip = () => {
+    // 次の未処理コンタクトに進む
+    const remaining = pendingNewContacts.slice(1);
+    setPendingNewContacts(remaining);
+
+    if (remaining.length === 0) {
+      setShowNewContactMemoModal(false);
+      setSelectedContact(null);
+    } else {
+      setSelectedContact(remaining[0]);
+    }
   };
 
   const handleDeepSearch = () => {
@@ -602,6 +650,13 @@ export const MobileView = ({
             });
             // Homeタブに遷移
             setCurrentTab("home");
+
+            // 新規コンタクトメモモーダルを表示
+            setPendingNewContacts(newContacts);
+            if (newContacts.length > 0) {
+              setSelectedContact(newContacts[0]);
+              setShowNewContactMemoModal(true);
+            }
           }}
         />
       )}
@@ -730,6 +785,14 @@ export const MobileView = ({
         }}
         onViewContact={handleViewContactFromActivity}
       />
+
+      {showNewContactMemoModal && selectedContact && (
+        <NewContactMemoModal
+          contact={selectedContact}
+          onSave={handleNewContactMemoSave}
+          onSkip={handleNewContactMemoSkip}
+        />
+      )}
 
       {/* Flash Message */}
       <Flash

@@ -14,14 +14,14 @@ export const OCRLoading: React.FC<OCRLoadingProps> = ({
   const [currentCard, setCurrentCard] = useState(1);
 
   useEffect(() => {
-    // プログレスバーのアニメーション（7.5秒に延長）
+    // プログレスバーのアニメーション（5秒）
     const progressInterval = setInterval(() => {
       setProgress((prev) => {
         if (prev >= 100) {
           clearInterval(progressInterval);
           return 100;
         }
-        return prev + 0.67; // 7.5秒で100%になるように調整
+        return prev + 1; // 5秒で100%になるように調整
       });
     }, 50);
 
@@ -35,13 +35,13 @@ export const OCRLoading: React.FC<OCRLoadingProps> = ({
           }
           return prev + 1;
         });
-      }, 7500 / cardCount); // 均等に分割（7.5秒）
+      }, 5000 / cardCount); // 均等に分割（5秒）
     }
 
-    // 7.5秒後に完了
+    // 5秒後に完了
     const timer = setTimeout(() => {
       onComplete();
-    }, 7500);
+    }, 5000);
 
     return () => {
       clearInterval(progressInterval);
@@ -95,7 +95,7 @@ export const OCRLoading: React.FC<OCRLoadingProps> = ({
         </p>
         <div className="mt-6 pt-6 border-t border-gray-200">
           <p className="text-sm font-semibold text-gray-700">
-            🤖 AI検索で人物情報を深掘り中...
+            AI検索で人物情報を深掘り中...
           </p>
           <p className="text-xs text-gray-500 mt-2">
             Web上の情報から詳細なプロフィールを取得しています

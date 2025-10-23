@@ -128,6 +128,11 @@ export const AddModal = ({ onClose, onAddContacts }: AddModalProps) => {
   };
 
   const handleOCRComplete = () => {
+    // success画面に遷移（コンタクト作成は後で行う）
+    setStep("success");
+  };
+
+  const handleGoHome = () => {
     const photoCount = capturedPhotos.length;
 
     // コンタクトを作成
@@ -141,8 +146,8 @@ export const AddModal = ({ onClose, onAddContacts }: AddModalProps) => {
       onAddContacts(newContacts);
     }
 
-    // success画面に遷移
-    setStep("success");
+    // モーダルを閉じる
+    onClose();
   };
 
   const handleSave = (contact: Partial<Contact>) => {
@@ -258,7 +263,7 @@ export const AddModal = ({ onClose, onAddContacts }: AddModalProps) => {
     return (
       <OCRSuccessScreen
         contactCount={capturedPhotos.length}
-        onGoHome={onClose}
+        onGoHome={handleGoHome}
       />
     );
   }

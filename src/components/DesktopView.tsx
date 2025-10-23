@@ -21,6 +21,7 @@ import { NotificationModal } from "./NotificationModal";
 import { ContactDetailPage } from "./ContactDetailPage";
 import { FollowUpModal } from "./FollowUpModal";
 import { AddNoteModal } from "./AddNoteModal";
+import { NewContactMemoModal } from "./NewContactMemoModal";
 import {
   TimelineSettings,
   defaultTimelineSettings,
@@ -54,6 +55,11 @@ export const DesktopView = ({
   const [showCelebrationModal, setShowCelebrationModal] = useState(false);
   const [followUpMessageType, setFollowUpMessageType] = useState<"thank-you" | "birthday">("thank-you");
 
+  // 新規コンタクトメモモーダル用
+  const [pendingNewContacts, setPendingNewContacts] = useState<Contact[]>([]);
+  const [showNewContactMemoModal, setShowNewContactMemoModal] = useState(false);
+  const [memoModalContact, setMemoModalContact] = useState<Contact | null>(null);
+
   // Timeline settings state
   const [timelineSettings, setTimelineSettings] = useState<TimelineSettings>(
     defaultTimelineSettings
@@ -82,6 +88,49 @@ export const DesktopView = ({
         c.id === id ? { ...c, status: "archived" as const } : c
       )
     );
+  };
+
+  const handleNewContactMemoSave = (
+    contactId: number,
+    metLocation: string,
+    memo: string
+  ) => {
+    // コンタクトを更新
+    setContacts(
+      contacts.map((c) =>
+        c.id === contactId
+          ? {
+              ...c,
+              metLocation: metLocation || c.metLocation,
+              firstImpressionMemo: memo,
+            }
+          : c
+      )
+    );
+
+    // 次の未処理コンタクトに進む
+    const remaining = pendingNewContacts.slice(1);
+    setPendingNewContacts(remaining);
+
+    if (remaining.length === 0) {
+      setShowNewContactMemoModal(false);
+      setMemoModalContact(null);
+    } else {
+      setMemoModalContact(remaining[0]);
+    }
+  };
+
+  const handleNewContactMemoSkip = () => {
+    // 次の未処理コンタクトに進む
+    const remaining = pendingNewContacts.slice(1);
+    setPendingNewContacts(remaining);
+
+    if (remaining.length === 0) {
+      setShowNewContactMemoModal(false);
+      setMemoModalContact(null);
+    } else {
+      setMemoModalContact(remaining[0]);
+    }
   };
 
   const renderMainContent = () => {
@@ -565,7 +614,29 @@ export const DesktopView = ({
       </div>
 
         {renderMainContent()}
-        {showAddModal && <AddModal onClose={() => setShowAddModal(false)} />}
+        {showAddModal && (
+          <AddModal
+            onClose={() => setShowAddModal(false)}
+            onAddContacts={(newContacts) => {
+              // 複数コンタクトを追加
+              setContacts([...newContacts, ...contacts]);
+              // アクティビティに記録
+              newContacts.forEach((contact) => {
+                addActivity(
+                  `${contact.name}さんを追加しました`,
+                  contact.id.toString()
+                );
+              });
+
+              // 新規コンタクトメモモーダルを表示
+              setPendingNewContacts(newContacts);
+              if (newContacts.length > 0) {
+                setMemoModalContact(newContacts[0]);
+                setShowNewContactMemoModal(true);
+              }
+            }}
+          />
+        )}
 
         <NotificationModal
           isOpen={showNotificationModal}
@@ -629,6 +700,14 @@ export const DesktopView = ({
               setShowCelebrationModal(false);
             }}
             messageType="birthday"
+          />
+        )}
+
+        {showNewContactMemoModal && memoModalContact && (
+          <NewContactMemoModal
+            contact={memoModalContact}
+            onSave={handleNewContactMemoSave}
+            onSkip={handleNewContactMemoSkip}
           />
         )}
 

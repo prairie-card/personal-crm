@@ -17,6 +17,7 @@ export interface Contact {
   aiSearchStatus?: "pending" | "processing" | "completed" | "failed";
   birthday?: Date; // 誕生日
   birthdayMessageSent?: boolean; // 誕生日メッセージ送信済みフラグ
+  firstImpressionMemo?: string; // 第一印象・出会った時のメモ
 
   // 1009-02 拡張フィールド
   prairieCardUrl?: string; // プレーリーカードURL

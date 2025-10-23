@@ -35,17 +35,14 @@ export const OCRSuccessScreen: React.FC<OCRSuccessScreenProps> = ({
         </p>
 
         {/* AI検索完了の強調 */}
-        <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 mb-6 w-full">
-          <div className="flex items-start gap-3">
-            <span className="text-2xl">🤖</span>
-            <div>
-              <p className="text-sm font-semibold text-blue-900 mb-1">
-                AI検索で詳細情報を取得しました
-              </p>
-              <p className="text-xs text-blue-700">
-                Web上の情報から追加のプロフィールを自動取得
-              </p>
-            </div>
+        <div className="bg-gray-100 border border-gray-300 rounded-xl p-4 mb-6 w-full">
+          <div>
+            <p className="text-sm font-semibold text-gray-900 mb-1">
+              AI検索で詳細情報を取得しました
+            </p>
+            <p className="text-xs text-gray-600">
+              Web上の情報から追加のプロフィールを自動取得
+            </p>
           </div>
         </div>
 
